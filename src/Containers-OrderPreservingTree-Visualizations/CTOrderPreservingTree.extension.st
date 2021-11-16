@@ -12,6 +12,9 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTree [
 	| dict edgeBuilder edges shapes |
 	dict := IdentityDictionary new.
 
+	shapes := OrderedCollection new.
+	edges := OrderedCollection new.
+
 	self withIndexDo: [ :each :i | 
 		| valueShape indexShape compositeShape |
 		valueShape := RSLabel new
@@ -26,36 +29,31 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTree [
 			              yourself.
 
 		RSLocation new bottom right
-			offset: indexShape textWidth + Float goldenRatio @ 0;
+			offset:
+				valueShape width + indexShape width / 2 * Float goldenRatio @ 0;
 			move: indexShape on: valueShape.
 
 		compositeShape := RSComposite new
 			                  model: each;
 			                  addShape: valueShape;
 			                  addShape: indexShape;
-			                  adjustToChildren;
 			                  padding: Float platinumRatio;
 			                  draggable;
 			                  yourself.
 
+		shapes add: compositeShape.
 		dict at: each put: compositeShape ].
-
-	shapes := dict values.
 
 	edgeBuilder := RSEdgeBuilder horizontalBezier
 		               withHorizontalAttachPoint;
 		               yourself.
 
-	edges := OrderedCollection new.
-
-	self children in: [ :children | 
-		self do: [ :each | 
-			parent at: each ifPresent: [ :anAssoc | 
-				| edge |
-				edge := edgeBuilder
-					        edgeFrom: (dict at: anAssoc key)
-					        to: (dict at: each).
-				edges add: edge ] ] ].
+	self associationsDo: [ :anAssoc | 
+		| edge |
+		edge := edgeBuilder
+			        edgeFrom: (dict at: anAssoc key)
+			        to: (dict at: anAssoc value).
+		edges add: edge ].
 
 	RSHorizontalGaussianJitterVanDerPloegTreeLayout
 		on: shapes
@@ -64,4 +62,20 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTree [
 	^ RSComposite new
 		  shapes: shapes , edges;
 		  yourself
+]
+
+{ #category : #'*Containers-OrderPreservingTree-Visualizations' }
+CTOrderPreservingTree >> inspectorCanvasValuesTree [
+
+	<inspectorPresentationOrder: 1010 title: 'Values tree'>
+	^ RSCanvas new
+		  add: self asShapeValuesHorizontalTree;
+		  addInteraction: RSCanvasController new;
+		  inspectorCanvas
+]
+
+{ #category : #'*Containers-OrderPreservingTree-Visualizations' }
+CTOrderPreservingTree >> inspectorCanvasValuesTreeContext: aContext [
+
+	aContext withoutEvaluator
 ]

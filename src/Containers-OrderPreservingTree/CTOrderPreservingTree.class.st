@@ -20,6 +20,15 @@ CTOrderPreservingTree >> asArray [
 		  self do: [ :each | aStream nextPut: each ] ]
 ]
 
+{ #category : #enumerating }
+CTOrderPreservingTree >> associationsDo: aBlock [
+
+	self do: [ :each | 
+		parent
+			at: each
+			ifPresent: [ :anAssoc | aBlock value: anAssoc key -> each ] ]
+]
+
 { #category : #accessing }
 CTOrderPreservingTree >> children [
 
