@@ -7,6 +7,12 @@ Class {
 	#category : #'Containers-OrderPreservingTree'
 }
 
+{ #category : #enumerating }
+CTOrderPreservingTree >> allSatisfy: aBlock [
+
+	^ self asArray allSatisfy: aBlock
+]
+
 { #category : #accessing }
 CTOrderPreservingTree >> asArray [
 
@@ -16,6 +22,12 @@ CTOrderPreservingTree >> asArray [
 
 { #category : #accessing }
 CTOrderPreservingTree >> children [
+
+	^ self children: [ :anAssoc | anAssoc key ]
+]
+
+{ #category : #accessing }
+CTOrderPreservingTree >> children: aBlock [
 
 	| child |
 	child := IdentityDictionary new.
@@ -34,13 +46,17 @@ CTOrderPreservingTree >> children [
 
 	child keysDo: [ :each | 
 		| children |
-		children := (child at: each)
-			            collect: [ :anAssoc | anAssoc key ]
-			            as: Array.
+		children := (child at: each) collect: aBlock as: Array.
 
 		child at: each put: children ].
 
 	^ child
+]
+
+{ #category : #accessing }
+CTOrderPreservingTree >> childrenWithIndexes [
+
+	^ self children: [ :each | each ]
 ]
 
 { #category : #enumerating }
@@ -57,6 +73,19 @@ CTOrderPreservingTree >> do: aBlock parent: aParent allChildren: children [
 
 	(children at: aParent) do: [ :aChild | 
 		self do: aBlock parent: aChild allChildren: children ]
+]
+
+{ #category : #enumerating }
+CTOrderPreservingTree >> do: aBlock withIndex: anIndex parent: aParent allChildren: children [
+
+	aBlock value: aParent value: anIndex.
+
+	(children at: aParent) do: [ :anAssoc | 
+		self
+			do: aBlock
+			withIndex: anAssoc value
+			parent: anAssoc key
+			allChildren: children ]
 ]
 
 { #category : #initialization }
@@ -128,4 +157,18 @@ CTOrderPreservingTree >> roots [
 CTOrderPreservingTree >> size [
 
 	^ self asArray size
+]
+
+{ #category : #enumerating }
+CTOrderPreservingTree >> withIndexDo: aBlock [
+
+	| roots |
+	roots := self roots.
+
+	roots doWithIndex: [ :aRoot :i | 
+		self
+			do: aBlock
+			withIndex: i - roots size
+			parent: aRoot
+			allChildren: self childrenWithIndexes ]
 ]

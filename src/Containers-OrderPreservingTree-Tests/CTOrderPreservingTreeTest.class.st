@@ -28,7 +28,14 @@ CTOrderPreservingTreeTest >> testAdd [
 		assert: (children at: 3) equals: #( 4 5 );
 		assert: (children at: 4) equals: #( 6 );
 		assert: (children at: 5) equals: #(  );
-		assert: (children at: 6) equals: #(  )
+		assert: (children at: 6) equals: #(  );
+		assert: (Array streamContents: [ :aStream | 
+					 tree withIndexDo: [ :each :i | aStream nextPut: each -> i ] ])
+		equals: { 
+				(3 -> 0).
+				(4 -> 1).
+				(6 -> 2).
+				(5 -> 3) }
 ]
 
 { #category : #tests }
