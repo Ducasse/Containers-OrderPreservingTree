@@ -65,6 +65,15 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTree [
 ]
 
 { #category : #'*Containers-OrderPreservingTree-Visualizations' }
+CTOrderPreservingTree >> asTreePresenter [
+
+	^ CTOrderPreservingTreePresenter basicNew
+		  tree: self;
+		  initialize;
+		  yourself
+]
+
+{ #category : #'*Containers-OrderPreservingTree-Visualizations' }
 CTOrderPreservingTree >> inspectorCanvasValuesTree [
 
 	<inspectorPresentationOrder: 1010 title: 'Values tree'>
