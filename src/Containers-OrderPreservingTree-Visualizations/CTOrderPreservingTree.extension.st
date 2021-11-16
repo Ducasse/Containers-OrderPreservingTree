@@ -67,10 +67,7 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTree [
 { #category : #'*Containers-OrderPreservingTree-Visualizations' }
 CTOrderPreservingTree >> asTreePresenter [
 
-	^ CTOrderPreservingTreePresenter basicNew
-		  tree: self;
-		  initialize;
-		  yourself
+	^ CTOrderPreservingTreePresenter on: self
 ]
 
 { #category : #'*Containers-OrderPreservingTree-Visualizations' }

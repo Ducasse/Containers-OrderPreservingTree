@@ -28,14 +28,14 @@ CTOrderPreservingTreePresenter >> initializePresenters [
 			 yourself)
 ]
 
+{ #category : #initialization }
+CTOrderPreservingTreePresenter >> setModelBeforeInitialization: aDomainObject [
+
+	tree := aDomainObject
+]
+
 { #category : #accessing }
 CTOrderPreservingTreePresenter >> title [
 
 	^ tree className , ' (' , tree size asString , ' elements)'
-]
-
-{ #category : #accessing }
-CTOrderPreservingTreePresenter >> tree: anObject [
-
-	tree := anObject
 ]
