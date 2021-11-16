@@ -71,30 +71,7 @@ CTOrderPreservingTree >> childrenWithIndexes [
 { #category : #enumerating }
 CTOrderPreservingTree >> do: aBlock [
 
-	self roots do: [ :aRoot | 
-		self do: aBlock parent: aRoot allChildren: self children ]
-]
-
-{ #category : #enumerating }
-CTOrderPreservingTree >> do: aBlock parent: aParent allChildren: children [
-
-	aBlock value: aParent.
-
-	(children at: aParent) do: [ :aChild | 
-		self do: aBlock parent: aChild allChildren: children ]
-]
-
-{ #category : #enumerating }
-CTOrderPreservingTree >> do: aBlock withIndex: anIndex parent: aParent allChildren: children [
-
-	aBlock value: aParent value: anIndex.
-
-	(children at: aParent) do: [ :anAssoc | 
-		self
-			do: aBlock
-			withIndex: anAssoc value
-			parent: anAssoc key
-			allChildren: children ]
+	self pre: aBlock post: [ :anObj |  ]
 ]
 
 { #category : #initialization }
@@ -142,6 +119,48 @@ CTOrderPreservingTree >> parent: aParent children: aCollection [
 	aCollection do: [ :each | self parent: aParent child: each ]
 ]
 
+{ #category : #enumerating }
+CTOrderPreservingTree >> pre: preBlock post: postBlock [
+
+	self roots do: [ :aRoot | 
+		self
+			pre: preBlock
+			post: postBlock
+			parent: aRoot
+			allChildren: self children ]
+]
+
+{ #category : #enumerating }
+CTOrderPreservingTree >> pre: preBlock post: postBlock parent: aParent allChildren: children [
+
+	preBlock value: aParent.
+
+	(children at: aParent) do: [ :aChild | 
+		self
+			pre: preBlock
+			post: postBlock
+			parent: aChild
+			allChildren: children ].
+
+	postBlock value: aParent
+]
+
+{ #category : #enumerating }
+CTOrderPreservingTree >> pre: preBlock post: postBlock withIndex: anIndex parent: aParent allChildren: children [
+
+	preBlock value: aParent value: anIndex.
+
+	(children at: aParent) do: [ :anAssoc | 
+		self
+			pre: preBlock
+			post: postBlock
+			withIndex: anAssoc value
+			parent: anAssoc key
+			allChildren: children ].
+
+	postBlock value: aParent value: anIndex
+]
+
 { #category : #accessing }
 CTOrderPreservingTree >> roots [
 
@@ -171,12 +190,19 @@ CTOrderPreservingTree >> size [
 { #category : #enumerating }
 CTOrderPreservingTree >> withIndexDo: aBlock [
 
+	self withIndexPre: aBlock withIndexPost: [ :anObj :i |  ]
+]
+
+{ #category : #enumerating }
+CTOrderPreservingTree >> withIndexPre: preBlock withIndexPost: postBlock [
+
 	| roots |
 	roots := self roots.
 
-	roots doWithIndex: [ :aRoot :i | 
+	roots withIndexDo: [ :aRoot :i | 
 		self
-			do: aBlock
+			pre: preBlock
+			post: postBlock
 			withIndex: i - roots size
 			parent: aRoot
 			allChildren: self childrenWithIndexes ]
