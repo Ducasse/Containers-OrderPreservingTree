@@ -39,3 +39,9 @@ CTOrderPreservingTreePresenter >> title [
 
 	^ tree className , ' (' , tree size asString , ' elements)'
 ]
+
+{ #category : #accessing }
+CTOrderPreservingTreePresenter >> treePresenter [
+
+	^ treePresenter
+]
