@@ -46,7 +46,8 @@ CTOrderPreservingTreeTest >> testAdd [
 				(1 -> 5).
 				(2 -> 4).
 				(7 -> 0).
-				(8 -> 6) }
+				(8 -> 6) };
+		assert: tree leaves equals: #( 6 9 1 2 8 )
 ]
 
 { #category : #tests }

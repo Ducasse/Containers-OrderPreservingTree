@@ -89,6 +89,17 @@ CTOrderPreservingTree >> isEmpty [
 ]
 
 { #category : #accessing }
+CTOrderPreservingTree >> leaves [
+
+	| children |
+	children := self children.
+
+	^ Array streamContents: [ :aStream | 
+		  self do: [ :each | 
+			  (children at: each) ifEmpty: [ aStream nextPut: each ] ] ]
+]
+
+{ #category : #accessing }
 CTOrderPreservingTree >> parent [
 
 	| allParents |
