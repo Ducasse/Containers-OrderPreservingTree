@@ -42,12 +42,13 @@ CTOrderPreservingTree >> children: aBlock [
 	child := IdentityDictionary new.
 
 	parent keysAndValuesDo: [ :aChild :anAssoc | 
-		| children |
+		| children c |
 		children := child at: anAssoc key ifAbsentPut: [ 
 			            SortedCollection sortUsing: [ :assoc :anotherAssoc | 
 				            assoc value < anotherAssoc value ] ].
 
-		children add: aChild -> anAssoc value.
+		c := anAssoc key.
+		c ~~ aChild ifTrue: [ children add: aChild -> anAssoc value ].
 
 		child at: aChild ifAbsentPut: [ 
 			SortedCollection sortUsing: [ :assoc :anotherAssoc | 
@@ -184,7 +185,10 @@ CTOrderPreservingTree >> roots [
 	parent valuesDo: [ :anAssoc | 
 		| aParent |
 		aParent := anAssoc key.
-		((parent includesKey: aParent) or: [ alreadySeen includes: aParent ]) 
+		((parent
+			  at: aParent
+			  ifPresent: [ :p | p key ~~ aParent ]
+			  ifAbsent: [ false ]) or: [ alreadySeen includes: aParent ]) 
 			ifFalse: [ 
 				roots add: anAssoc.
 				alreadySeen add: aParent ] ].
