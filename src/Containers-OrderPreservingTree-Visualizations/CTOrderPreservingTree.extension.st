@@ -28,10 +28,12 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTree [
 			              fontSize: valueShape fontSize * Float silverRatio;
 			              yourself.
 
-		RSLocation new bottom right
+		RSLocation new
+			bottom;
+			right;
 			offset:
-				valueShape width + indexShape width / 2 * Float goldenRatio @ 0;
-			move: indexShape on: valueShape.
+				indexShape width + (valueShape width * Float silverRatio) @ 0;
+			stick: indexShape on: valueShape.
 
 		compositeShape := RSComposite new
 			                  model: each;

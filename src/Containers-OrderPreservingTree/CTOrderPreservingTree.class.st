@@ -7,12 +7,6 @@ Class {
 	#category : #'Containers-OrderPreservingTree'
 }
 
-{ #category : #enumerating }
-CTOrderPreservingTree >> allSatisfy: aBlock [
-
-	^ self asArray allSatisfy: aBlock
-]
-
 { #category : #accessing }
 CTOrderPreservingTree >> asArray [
 
@@ -42,17 +36,15 @@ CTOrderPreservingTree >> children: aBlock [
 	child := IdentityDictionary new.
 
 	parent keysAndValuesDo: [ :aChild :anAssoc | 
-		| children c |
-		children := child at: anAssoc key ifAbsentPut: [ 
-			            SortedCollection sortUsing: [ :assoc :anotherAssoc | 
-				            assoc value < anotherAssoc value ] ].
+		| children |
+		children := child
+			            at: anAssoc key
+			            ifAbsentPut: [ self newCollection ].
 
-		c := anAssoc key.
-		c ~~ aChild ifTrue: [ children add: aChild -> anAssoc value ].
+		anAssoc key ~~ aChild ifTrue: [ 
+			children add: aChild -> anAssoc value ].
 
-		child at: aChild ifAbsentPut: [ 
-			SortedCollection sortUsing: [ :assoc :anotherAssoc | 
-				assoc value < anotherAssoc value ] ] ].
+		child at: aChild ifAbsentPut: [ self newCollection ] ].
 
 	child keysDo: [ :each | 
 		| children |
@@ -98,6 +90,13 @@ CTOrderPreservingTree >> leaves [
 	^ Array streamContents: [ :aStream | 
 		  self do: [ :each | 
 			  (children at: each) ifEmpty: [ aStream nextPut: each ] ] ]
+]
+
+{ #category : #accessing }
+CTOrderPreservingTree >> newCollection [
+
+	^ SortedCollection sortUsing: [ :assoc :anotherAssoc | 
+		  assoc value < anotherAssoc value ]
 ]
 
 { #category : #accessing }
@@ -177,21 +176,20 @@ CTOrderPreservingTree >> pre: preBlock post: postBlock withIndex: anIndex parent
 CTOrderPreservingTree >> roots [
 
 	| roots alreadySeen |
-	roots := SortedCollection sortUsing: [ :anAssoc :anotherAssoc | 
-		         anAssoc value < anotherAssoc value ].
+	roots := self newCollection.
 
 	alreadySeen := IdentitySet new.
 
 	parent valuesDo: [ :anAssoc | 
 		| aParent |
 		aParent := anAssoc key.
-		((parent
-			  at: aParent
-			  ifPresent: [ :p | p key ~~ aParent ]
-			  ifAbsent: [ false ]) or: [ alreadySeen includes: aParent ]) 
-			ifFalse: [ 
-				roots add: anAssoc.
-				alreadySeen add: aParent ] ].
+		((alreadySeen includes: aParent) or: [ 
+			 parent
+				 at: aParent
+				 ifPresent: [ :p | p key ~~ aParent ]
+				 ifAbsent: [ false ] ]) ifFalse: [ 
+			roots add: anAssoc.
+			alreadySeen add: aParent ] ].
 
 	^ roots collect: [ :anAssoc | anAssoc key ] as: Array
 ]
