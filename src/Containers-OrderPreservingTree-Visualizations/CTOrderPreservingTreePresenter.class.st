@@ -18,13 +18,14 @@ CTOrderPreservingTreePresenter >> initializePresenters [
 		                 activateOnSingleClick;
 		                 roots: tree roots;
 		                 children: [ :each | children at: each ];
+		                 beResizable;
 		                 yourself.
 
 
 	self layout: (SpBoxLayout newTopToBottom
-"			 spacing: 5;"
 			 add: treePresenter expand: true;
 			 yourself)
+	"			 spacing: 5;"
 ]
 
 { #category : #initialization }
