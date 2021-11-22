@@ -22,6 +22,8 @@ CTOrderPreservingTreeTest >> testAdd [
 		parent: 7 child: 8;
 		parent: 4 child: 9.
 
+	tree asPresenter openWithSpec.
+
 	children := tree children.
 
 	self

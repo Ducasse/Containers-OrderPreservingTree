@@ -14,16 +14,15 @@ CTOrderPreservingTreePresenter >> initializePresenters [
 	| children |
 	children := tree children.
 
-	treePresenter := self newTree
+	treePresenter := self newTreeTable
 		                 activateOnSingleClick;
 		                 roots: tree roots;
 		                 children: [ :each | children at: each ];
-		                 displayIcon: [ :each | each systemIcon ];
 		                 yourself.
 
 
 	self layout: (SpBoxLayout newTopToBottom
-			 spacing: 5;
+"			 spacing: 5;"
 			 add: treePresenter expand: true;
 			 yourself)
 ]
@@ -40,8 +39,8 @@ CTOrderPreservingTreePresenter >> title [
 	^ tree className , ' (' , tree size asString , ' elements)'
 ]
 
-{ #category : #accessing }
-CTOrderPreservingTreePresenter >> treePresenter [
+{ #category : #initialization }
+CTOrderPreservingTreePresenter >> withTreePresenterDo: aBlock [
 
-	^ treePresenter
+	^ aBlock value: treePresenter
 ]

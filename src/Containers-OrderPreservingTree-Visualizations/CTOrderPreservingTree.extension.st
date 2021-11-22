@@ -7,6 +7,19 @@ CTOrderPreservingTree >> acceptSlotDescriptorsVisitor: aVisitor [
 ]
 
 { #category : #'*Containers-OrderPreservingTree-Visualizations' }
+CTOrderPreservingTree >> asPresenter [
+
+	^ (CTOrderPreservingTreePresenter on: self)
+		  withTreePresenterDo: [ :aPresenter | 
+			  aPresenter
+				  addColumn: (SpStringTableColumn
+						   title: 'Model'
+						   evaluated: [ :aContext | aContext ]);
+				  expandAll ];
+		  yourself
+]
+
+{ #category : #'*Containers-OrderPreservingTree-Visualizations' }
 CTOrderPreservingTree >> asShapeValuesHorizontalTree [
 
 	| dict edgeBuilder edges shapes |
@@ -69,7 +82,12 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTree [
 { #category : #'*Containers-OrderPreservingTree-Visualizations' }
 CTOrderPreservingTree >> asTreePresenter [
 
-	^ CTOrderPreservingTreePresenter on: self
+	^ (CTOrderPreservingTreePresenter on: self)
+		  withTreePresenterDo: [ :aPresenter | 
+			  aPresenter addColumn: (SpStringTableColumn
+						   title: 'Model'
+						   evaluated: [ :aContext | aContext ]) ];
+		  yourself
 ]
 
 { #category : #'*Containers-OrderPreservingTree-Visualizations' }
