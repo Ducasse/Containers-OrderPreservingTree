@@ -100,18 +100,6 @@ CTOrderPreservingTree >> newCollection [
 ]
 
 { #category : #accessing }
-CTOrderPreservingTree >> parent [
-
-	| allParents |
-	allParents := IdentityDictionary new.
-
-	parent keysAndValuesDo: [ :aChild :anAssoc | 
-		allParents at: aChild put: anAssoc key ].
-
-	^ allParents
-]
-
-{ #category : #accessing }
 CTOrderPreservingTree >> parent: aParent child: aChild [
 
 	parent
@@ -128,6 +116,27 @@ CTOrderPreservingTree >> parent: aParent child: aChild [
 CTOrderPreservingTree >> parent: aParent children: aCollection [
 
 	aCollection do: [ :each | self parent: aParent child: each ]
+]
+
+{ #category : #accessing }
+CTOrderPreservingTree >> parent: aChild ifAbsent: aBlock [
+
+	^ parent
+		  at: aChild
+		  ifPresent: [ :anAssoc | anAssoc key ]
+		  ifAbsent: aBlock
+]
+
+{ #category : #accessing }
+CTOrderPreservingTree >> parents [
+
+	| allParents |
+	allParents := IdentityDictionary new.
+
+	parent keysAndValuesDo: [ :aChild :anAssoc | 
+		allParents at: aChild put: anAssoc key ].
+
+	^ allParents
 ]
 
 { #category : #enumerating }
