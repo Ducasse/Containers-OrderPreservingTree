@@ -15,6 +15,7 @@ CTOrderPreservingTree >> asPresenter [
 				  addColumn: (SpStringTableColumn
 						   title: 'Model'
 						   evaluated: [ :aContext | aContext ]);
+				  hideColumnHeaders;
 				  expandAll ];
 		  yourself
 ]
