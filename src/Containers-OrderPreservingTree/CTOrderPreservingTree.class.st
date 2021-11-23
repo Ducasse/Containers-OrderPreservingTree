@@ -153,7 +153,8 @@ CTOrderPreservingTree >> pre: preBlock post: postBlock [
 { #category : #enumerating }
 CTOrderPreservingTree >> pre: preBlock post: postBlock parent: aParent allChildren: children [
 
-	preBlock value: aParent.
+	| carry |
+	carry := preBlock value: aParent.
 
 	(children at: aParent) do: [ :aChild | 
 		self
@@ -162,13 +163,14 @@ CTOrderPreservingTree >> pre: preBlock post: postBlock parent: aParent allChildr
 			parent: aChild
 			allChildren: children ].
 
-	postBlock value: aParent
+	postBlock cull: aParent cull: carry
 ]
 
 { #category : #enumerating }
 CTOrderPreservingTree >> pre: preBlock post: postBlock withIndex: anIndex parent: aParent allChildren: children [
 
-	preBlock value: aParent value: anIndex.
+	| carry |
+	carry := preBlock value: aParent value: anIndex.
 
 	(children at: aParent) do: [ :anAssoc | 
 		self
@@ -178,7 +180,7 @@ CTOrderPreservingTree >> pre: preBlock post: postBlock withIndex: anIndex parent
 			parent: anAssoc key
 			allChildren: children ].
 
-	postBlock value: aParent value: anIndex
+	postBlock cull: aParent cull: anIndex cull: carry
 ]
 
 { #category : #accessing }
