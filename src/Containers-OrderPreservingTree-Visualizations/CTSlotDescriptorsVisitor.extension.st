@@ -4,7 +4,8 @@ Extension { #name : #CTSlotDescriptorsVisitor }
 CTSlotDescriptorsVisitor >> visitOrderPreservingTree: aTree [
 
 	^ (self visitObject: aTree)
-	  , { (#asShapeValuesHorizontalTree asSlotDescriptor
+	  ,
+		  { (#asShapeValuesHorizontalTreeWithOutlinerShapes asSlotDescriptor
 			   inline: true;
 			   quote) }
 ]

@@ -21,7 +21,7 @@ CTOrderPreservingTree >> asPresenter [
 ]
 
 { #category : #'*Containers-OrderPreservingTree-Visualizations' }
-CTOrderPreservingTree >> asShapeValuesHorizontalTree [
+CTOrderPreservingTree >> asShapeValuesHorizontalTreeModelShape: modelBlock indexBlock: indexBlock [
 
 	| dict edgeBuilder edges shapes |
 	dict := IdentityDictionary new.
@@ -31,22 +31,14 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTree [
 
 	self withIndexDo: [ :each :i | 
 		| valueShape indexShape compositeShape |
-		valueShape := RSLabel new
-			              model: each;
-			              fontName: 'Source Code Pro';
-			              yourself.
+		valueShape := modelBlock value: each.
 
-		indexShape := RSLabel new
-			              model: i;
-			              text: '(' , i asString , ')';
-			              fontSize: valueShape fontSize * Float silverRatio;
-			              yourself.
+		indexShape := indexBlock cull: i cull: valueShape.
 
 		RSLocation new
 			bottom;
 			right;
-			offset:
-				indexShape width + (valueShape width * Float silverRatio) @ 0;
+			offset: indexShape width + (indexShape width /2 * Float silverRatio) @ 0;
 			stick: indexShape on: valueShape.
 
 		compositeShape := RSComposite new
@@ -71,13 +63,42 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTree [
 			        to: (dict at: anAssoc value).
 		edges add: edge ].
 
-	RSHorizontalGaussianJitterVanDerPloegTreeLayout
-		on: shapes
-		edges: edges.
+	RSHorizontalVanDerPloegTreeLayout on: shapes edges: edges.
 
 	^ RSComposite new
 		  shapes: shapes , edges;
 		  yourself
+]
+
+{ #category : #'*Containers-OrderPreservingTree-Visualizations' }
+CTOrderPreservingTree >> asShapeValuesHorizontalTreeWithLabelShapes [
+
+	^ self
+		  asShapeValuesHorizontalTreeModelShape: [ :each | 
+			  RSLabel new
+				  model: each;
+				  fontName: 'Source Code Pro';
+				  yourself ]
+		  indexBlock: [ :i :modelShape | 
+			  RSLabel new
+				  model: i;
+				  text: '(' , i asString , ')';
+				  fontSize: modelShape fontSize * Float silverRatio;
+				  yourself ]
+]
+
+{ #category : #'*Containers-OrderPreservingTree-Visualizations' }
+CTOrderPreservingTree >> asShapeValuesHorizontalTreeWithOutlinerShapes [
+
+	^ self
+		  asShapeValuesHorizontalTreeModelShape: [ :each | 
+		  each asShapeSlotsDfsTree: each slotDescriptorsContext ]
+		  indexBlock: [ :i | 
+			  RSLabel new
+				  model: i;
+				  text: '(' , i asString , ')';
+				  useSilverRatioFontSize;
+				  yourself ]
 ]
 
 { #category : #'*Containers-OrderPreservingTree-Visualizations' }
@@ -96,7 +117,7 @@ CTOrderPreservingTree >> inspectorCanvasValuesTree [
 
 	<inspectorPresentationOrder: 1010 title: 'Values tree'>
 	^ RSCanvas new
-		  add: self asShapeValuesHorizontalTree;
+		  add: self asShapeValuesHorizontalTreeWithLabelShapes;
 		  addInteraction: RSCanvasController new;
 		  inspectorCanvas
 ]
