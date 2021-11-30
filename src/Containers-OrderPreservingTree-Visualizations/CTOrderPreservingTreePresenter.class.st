@@ -25,7 +25,6 @@ CTOrderPreservingTreePresenter >> initializePresenters [
 	self layout: (SpBoxLayout newTopToBottom
 			 add: treePresenter expand: true;
 			 yourself)
-	"			 spacing: 5;"
 ]
 
 { #category : #initialization }

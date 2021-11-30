@@ -108,6 +108,21 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTreeWithOutlinerShapes [
 { #category : #'*Containers-OrderPreservingTree-Visualizations' }
 CTOrderPreservingTree >> asTreePresenter [
 
+	| children |
+	children := self children.
+
+	^ SpTreePresenter new
+		  activateOnSingleClick;
+		  roots: self roots;
+		  children: [ :each | children at: each ];
+		  beResizable;
+		  expandAll;
+		  yourself
+]
+
+{ #category : #'*Containers-OrderPreservingTree-Visualizations' }
+CTOrderPreservingTree >> asTreeTablePresenter [
+
 	^ (CTOrderPreservingTreePresenter on: self)
 		  withTreePresenterDo: [ :aPresenter | 
 			  aPresenter addColumn: (SpStringTableColumn
