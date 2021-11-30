@@ -31,36 +31,40 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTreeModelShape: modelBlock index
 
 	self withIndexDo: [ :each :i | 
 		| valueShape indexShape compositeShape |
-		valueShape := modelBlock value: each.
+		valueShape := (modelBlock value: each) boxedWithPad:
+			              Float goldenPlatinumRatio.
 
 		indexShape := indexBlock cull: i cull: valueShape.
 
 		RSLocation new
-			bottom;
+			below;
 			right;
-			offset: indexShape width + (indexShape width /2 * Float silverRatio) @ 0;
+			offset: Float goldenPlatinumRatio @ indexShape height negated / 2;
 			stick: indexShape on: valueShape.
 
 		compositeShape := RSComposite new
 			                  model: each;
-			                  addShape: valueShape;
-			                  addShape: indexShape;
-			                  padding: Float platinumRatio;
+			                  shapes: { 
+					                  valueShape.
+					                  indexShape };
 			                  draggable;
 			                  yourself.
 
 		shapes add: compositeShape.
 		dict at: each put: compositeShape ].
 
-	edgeBuilder := RSEdgeBuilder horizontalBezier
+	edgeBuilder := RSLineBuilder orthoHorizontal
 		               withHorizontalAttachPoint;
 		               yourself.
+
+	edgeBuilder shape cornerRadii: Float goldenPlatinumRatio.
 
 	self associationsDo: [ :anAssoc | 
 		| edge |
 		edge := edgeBuilder
 			        edgeFrom: (dict at: anAssoc key)
 			        to: (dict at: anAssoc value).
+		edge color: edge color translucent.
 		edges add: edge ].
 
 	RSHorizontalVanDerPloegTreeLayout on: shapes edges: edges.
@@ -83,7 +87,7 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTreeWithLabelShapes [
 			  RSLabel new
 				  model: i;
 				  text: '(' , i asString , ')';
-				  fontSize: modelShape fontSize * Float silverRatio;
+				  fontSizeSilverRatio;
 				  yourself ]
 ]
 
@@ -97,7 +101,7 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTreeWithOutlinerShapes [
 			  RSLabel new
 				  model: i;
 				  text: '(' , i asString , ')';
-				  useSilverRatioFontSize;
+				  fontSizeSilverRatio;
 				  yourself ]
 ]
 
@@ -118,6 +122,11 @@ CTOrderPreservingTree >> inspectorCanvasValuesTree [
 	<inspectorPresentationOrder: 1010 title: 'Values tree'>
 	^ RSCanvas new
 		  add: self asShapeValuesHorizontalTreeWithLabelShapes;
+		  in: [ :aCanvas | 
+			  RSSVGExporter new
+				  canvas: aCanvas;
+				  zoomToShapesWithPadding: Float goldenPlatinumRatio;
+				  export ];
 		  addInteraction: RSCanvasController new;
 		  inspectorCanvas
 ]
