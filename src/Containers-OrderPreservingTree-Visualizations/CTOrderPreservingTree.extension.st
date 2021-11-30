@@ -123,7 +123,7 @@ CTOrderPreservingTree >> inspectorCanvasValuesTree [
 	^ RSCanvas new
 		  add: self asShapeValuesHorizontalTreeWithLabelShapes;
 		  in: [ :aCanvas | 
-			  RSSVGExporter new
+			  RSSVGCairoExporter new
 				  canvas: aCanvas;
 				  zoomToShapesWithPadding: Float goldenPlatinumRatio;
 				  export ];
