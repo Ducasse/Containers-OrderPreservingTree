@@ -207,6 +207,41 @@ CTOrderPreservingTree >> roots [
 	^ roots collect: [ :anAssoc | anAssoc key ] as: Array
 ]
 
+{ #category : #enumerating }
+CTOrderPreservingTree >> select: aBlock [
+
+	| tree children |
+	children := self children.
+
+	tree := self class new.
+
+	self roots
+		select: [ :each | aBlock cull: each cull: each ]
+		thenDo: [ :each | 
+			self
+				select: aBlock
+				parent: each
+				allChildren: children
+				tree: tree ].
+
+	^ tree
+]
+
+{ #category : #enumerating }
+CTOrderPreservingTree >> select: aBlock parent: aParent allChildren: children tree: tree [
+
+	(children at: aParent)
+		select: [ :aChild | aBlock cull: aChild cull: aParent ]
+		thenDo: [ :aChild | 
+			tree parent: aParent child: aChild.
+
+			self
+				select: aBlock
+				parent: aChild
+				allChildren: children
+				tree: tree ]
+]
+
 { #category : #accessing }
 CTOrderPreservingTree >> size [
 
