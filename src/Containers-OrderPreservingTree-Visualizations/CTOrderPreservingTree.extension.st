@@ -81,7 +81,7 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTreeWithLabelShapes [
 		  asShapeValuesHorizontalTreeModelShape: [ :each | 
 			  RSLabel new
 				  model: each;
-				  fontName: 'Source Code Pro';
+				  useDefaultCodeFont;
 				  yourself ]
 		  indexBlock: [ :i :modelShape | 
 			  RSLabel new
