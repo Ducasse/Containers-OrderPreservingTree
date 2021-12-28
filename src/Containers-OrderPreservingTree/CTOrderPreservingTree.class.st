@@ -113,6 +113,24 @@ CTOrderPreservingTree >> parent: aParent child: aChild [
 ]
 
 { #category : #accessing }
+CTOrderPreservingTree >> parent: aParent child: aChild onCycleDo: aBlock [
+
+	| cycle each detected |
+	self parent: aParent child: aChild.
+
+	detected := false.
+	cycle := aChild ~~> nil.
+	[ 
+	detected not and: [ 
+		each := cycle value.
+		parent includesKey: each ] ] whileTrue: [ 
+		cycle := (parent at: each) key ~~> cycle.
+		cycle value == aChild ifTrue: [ 
+			aBlock value: cycle reversed.
+			detected := true ] ]
+]
+
+{ #category : #accessing }
 CTOrderPreservingTree >> parent: aParent children: aCollection [
 
 	aCollection do: [ :each | self parent: aParent child: each ]
