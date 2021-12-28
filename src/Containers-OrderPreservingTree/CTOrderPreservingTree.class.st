@@ -160,12 +160,15 @@ CTOrderPreservingTree >> parents [
 { #category : #enumerating }
 CTOrderPreservingTree >> pre: preBlock post: postBlock [
 
+	| children |
+	children := self children.
+
 	self roots do: [ :aRoot | 
 		self
 			pre: preBlock
 			post: postBlock
 			parent: aRoot
-			allChildren: self children
+			allChildren: children
 			level: 0 ]
 ]
 
@@ -175,13 +178,15 @@ CTOrderPreservingTree >> pre: preBlock post: postBlock parent: aParent allChildr
 	| carry |
 	carry := preBlock cull: aParent cull: aLevel.
 
-	(children at: aParent) do: [ :aChild | 
-		self
-			pre: preBlock
-			post: postBlock
-			parent: aChild
-			allChildren: children
-			level: aLevel + 1 ].
+	(children at: aParent)
+		select: [ :aChild | aChild ~~ aParent ]
+		thenDo: [ :aChild | 
+			self
+				pre: preBlock
+				post: postBlock
+				parent: aChild
+				allChildren: children
+				level: aLevel + 1 ].
 
 	postBlock cull: aParent cull: carry cull: aLevel
 ]
