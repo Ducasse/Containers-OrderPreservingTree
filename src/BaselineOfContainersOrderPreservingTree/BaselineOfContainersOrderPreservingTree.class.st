@@ -1,11 +1,11 @@
 Class {
-	#name : #BaselineOfOrderPreservingTree,
+	#name : #BaselineOfContainersOrderPreservingTree,
 	#superclass : #BaselineOf,
-	#category : #BaselineOfOrderPreservingTree
+	#category : #BaselineOfContainersOrderPreservingTree
 }
 
 { #category : #baselines }
-BaselineOfOrderPreservingTree >> baseline: spec [
+BaselineOfContainersOrderPreservingTree >> baseline: spec [
 
 	<baseline>
 	spec for: #common do: [
