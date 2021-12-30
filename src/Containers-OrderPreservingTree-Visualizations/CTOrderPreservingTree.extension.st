@@ -116,8 +116,8 @@ CTOrderPreservingTree >> asTreePresenter [
 		  roots: self roots;
 		  children: [ :each | children at: each ];
 		  beResizable;
-		  expandAllTo: parent size log ceiling;
-		  yourself
+		  expandAll;
+		  "		  expandAllTo: parent size log ceiling;"yourself
 ]
 
 { #category : #'*Containers-OrderPreservingTree-Visualizations' }
