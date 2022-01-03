@@ -57,3 +57,21 @@ CTOrderPreservingTreeTest >> testCreation [
 
 	self assertEmpty: CTOrderPreservingTree new
 ]
+
+{ #category : #tests }
+CTOrderPreservingTreeTest >> testCycle [
+
+	| tree aCycle |
+	tree := CTOrderPreservingTree new.
+
+	tree
+		parent: 2 child: 3;
+		parent: 2 child: 4;
+		parent: 1 child: 2.
+
+	tree parent: 3 child: 1 onCycleDo: [ :cycle | aCycle := cycle ].
+
+	self
+		assert: aCycle asLinkedList
+		equals: (1 ~~> (3 ~~> (2 ~~> (1 ~~> nil)))) asLinkedList
+]

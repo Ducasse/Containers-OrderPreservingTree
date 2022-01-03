@@ -81,7 +81,7 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTreeWithLabelShapes [
 		  asShapeValuesHorizontalTreeModelShape: [ :each | 
 			  RSLabel new
 				  model: each;
-				  fontName: 'Source Code Pro';
+				  useDefaultCodeFont;
 				  yourself ]
 		  indexBlock: [ :i :modelShape | 
 			  RSLabel new
@@ -117,7 +117,7 @@ CTOrderPreservingTree >> asTreePresenter [
 		  children: [ :each | children at: each ];
 		  beResizable;
 		  expandAll;
-		  yourself
+		  "		  expandAllTo: parent size log ceiling;"yourself
 ]
 
 { #category : #'*Containers-OrderPreservingTree-Visualizations' }

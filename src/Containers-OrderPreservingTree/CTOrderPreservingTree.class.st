@@ -113,6 +113,24 @@ CTOrderPreservingTree >> parent: aParent child: aChild [
 ]
 
 { #category : #accessing }
+CTOrderPreservingTree >> parent: aParent child: aChild onCycleDo: aBlock [
+
+	| cycle each detected |
+	self parent: aParent child: aChild.
+
+	detected := false.
+	cycle := aChild ~~> nil.
+	[ 
+	detected not and: [ 
+		each := cycle value.
+		parent includesKey: each ] ] whileTrue: [ 
+		cycle := (parent at: each) key ~~> cycle.
+		cycle value == aChild ifTrue: [ 
+			aBlock value: cycle reversed.
+			detected := true ] ]
+]
+
+{ #category : #accessing }
 CTOrderPreservingTree >> parent: aParent children: aCollection [
 
 	aCollection do: [ :each | self parent: aParent child: each ]
@@ -142,12 +160,15 @@ CTOrderPreservingTree >> parents [
 { #category : #enumerating }
 CTOrderPreservingTree >> pre: preBlock post: postBlock [
 
+	| children |
+	children := self children.
+
 	self roots do: [ :aRoot | 
 		self
 			pre: preBlock
 			post: postBlock
 			parent: aRoot
-			allChildren: self children
+			allChildren: children
 			level: 0 ]
 ]
 
@@ -157,13 +178,15 @@ CTOrderPreservingTree >> pre: preBlock post: postBlock parent: aParent allChildr
 	| carry |
 	carry := preBlock cull: aParent cull: aLevel.
 
-	(children at: aParent) do: [ :aChild | 
-		self
-			pre: preBlock
-			post: postBlock
-			parent: aChild
-			allChildren: children
-			level: aLevel + 1 ].
+	(children at: aParent)
+		select: [ :aChild | aChild ~~ aParent ]
+		thenDo: [ :aChild | 
+			self
+				pre: preBlock
+				post: postBlock
+				parent: aChild
+				allChildren: children
+				level: aLevel + 1 ].
 
 	postBlock cull: aParent cull: carry cull: aLevel
 ]
