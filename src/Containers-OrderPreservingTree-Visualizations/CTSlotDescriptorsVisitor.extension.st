@@ -5,9 +5,9 @@ CTSlotDescriptorsVisitor >> visitOrderPreservingTree: aTree [
 
 	^ (self visitObject: aTree) , { 
 		  (#asShapeValuesHorizontalTreeWithLabelShapes asSlotDescriptor
-			   inline: true;
+			   inline;
 			   quote).
 		  (#asShapeValuesHorizontalTreeWithOutlinerShapes asSlotDescriptor
-			   inline: true;
+			   inline;
 			   quote) }
 ]
