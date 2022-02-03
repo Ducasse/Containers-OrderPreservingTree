@@ -92,11 +92,11 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTreeWithLabelShapes [
 ]
 
 { #category : #'*Containers-OrderPreservingTree-Visualizations' }
-CTOrderPreservingTree >> asShapeValuesHorizontalTreeWithOutlinerShapes [
+CTOrderPreservingTree >> asShapeValuesHorizontalTreeWithOutlinerShapes: aDfsWalker [
 
 	^ self
 		  asShapeValuesHorizontalTreeModelShape: [ :each | 
-		  each asShapeSlotsDfsTree: each slotDescriptorsContext ]
+		  each asShapeSlotsDfsTree: aDfsWalker ]
 		  indexBlock: [ :i | 
 			  RSLabel new
 				  model: i;
