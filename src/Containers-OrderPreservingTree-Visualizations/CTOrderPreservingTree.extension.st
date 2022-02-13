@@ -31,7 +31,7 @@ CTOrderPreservingTree >> asShapeValuesHorizontalTreeModelShape: modelBlock index
 
 	self withIndexDo: [ :each :i | 
 		| valueShape indexShape compositeShape |
-		valueShape := (modelBlock value: each) boxedWithPad:
+		valueShape := (modelBlock value: each) notedWithPad:
 			              Float goldenPlatinumRatio.
 
 		indexShape := indexBlock cull: i cull: valueShape.
