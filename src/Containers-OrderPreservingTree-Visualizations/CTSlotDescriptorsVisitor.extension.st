@@ -4,10 +4,12 @@ Extension { #name : #CTSlotDescriptorsVisitor }
 CTSlotDescriptorsVisitor >> visitOrderPreservingTree: aTree [
 
 	^ (self visitObject: aTree) , { 
-		  (#asShapeValuesHorizontalTreeWithLabelShapes asSlotDescriptor
+		  ((self newSlotDescriptorSelector:
+				    #asShapeValuesHorizontalTreeWithLabelShapes)
 			   inline;
 			   quote).
-		  (#asShapeValuesHorizontalTreeWithOutlinerShapes: asSlotDescriptor
+		  ((self newSlotDescriptorSelector:
+				    #asShapeValuesHorizontalTreeWithOutlinerShapes:)
 			   inline;
 			   quote) }
 ]
